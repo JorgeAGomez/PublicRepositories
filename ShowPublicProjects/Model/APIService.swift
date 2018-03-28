@@ -20,9 +20,6 @@ let BASE_URL = "https://api.github.com"
 
 let PUBLIC_REPOS = "/repositories"
 
-//personal token
-let AUTH_TOKEN = "ec2b05a88ef2f5154b625161535dde6bea085e6a"
-
 class APIService {
 
   static func getPublicRepositories(completed: @escaping ([Repository]) -> ()){
