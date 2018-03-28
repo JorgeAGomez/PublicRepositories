@@ -26,6 +26,8 @@
 		C3AA2655206B8B75000B80D8 /* PublicProjectsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AA2654206B8B75000B80D8 /* PublicProjectsVC.swift */; };
 		C3AA2657206B93C3000B80D8 /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AA2656206B93C3000B80D8 /* Identifiers.swift */; };
 		C3AA265B206BA03A000B80D8 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = C3AA265A206BA03A000B80D8 /* Auth0.plist */; };
+		C3E82E57206C2D9A0047A468 /* UIImage+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E82E55206C2D990047A468 /* UIImage+Helper.swift */; };
+		C3E82E58206C2D9A0047A468 /* UIImageView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E82E56206C2D9A0047A468 /* UIImageView+Helper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +53,8 @@
 		C3AA2654206B8B75000B80D8 /* PublicProjectsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicProjectsVC.swift; sourceTree = "<group>"; };
 		C3AA2656206B93C3000B80D8 /* Identifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiers.swift; sourceTree = "<group>"; };
 		C3AA265A206BA03A000B80D8 /* Auth0.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
+		C3E82E55206C2D990047A468 /* UIImage+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helper.swift"; sourceTree = "<group>"; };
+		C3E82E56206C2D9A0047A468 /* UIImageView+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Helper.swift"; sourceTree = "<group>"; };
 		ECD2F3C0DB518443A42480A7 /* Pods-ShowPublicProjects.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShowPublicProjects.release.xcconfig"; path = "Pods/Target Support Files/Pods-ShowPublicProjects/Pods-ShowPublicProjects.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -167,6 +171,8 @@
 			isa = PBXGroup;
 			children = (
 				C3AA2643206B81F4000B80D8 /* UIApplication+Helper.swift */,
+				C3E82E55206C2D990047A468 /* UIImage+Helper.swift */,
+				C3E82E56206C2D9A0047A468 /* UIImageView+Helper.swift */,
 				C3AA2642206B81F4000B80D8 /* UILabel+Helper.swift */,
 				C3AA2646206B81F4000B80D8 /* UIView+Helper.swift */,
 				C3AA263C206B81F3000B80D8 /* UIViewController+Helper.swift */,
@@ -318,8 +324,10 @@
 				C3AA2655206B8B75000B80D8 /* PublicProjectsVC.swift in Sources */,
 				C336AD28206BC7D800560E77 /* RepoDetailVC.swift in Sources */,
 				C33C64102068E458004D88B9 /* LoginVC.swift in Sources */,
+				C3E82E57206C2D9A0047A468 /* UIImage+Helper.swift in Sources */,
 				C33C64122068E538004D88B9 /* APIService.swift in Sources */,
 				C33C64142068E565004D88B9 /* Repository.swift in Sources */,
+				C3E82E58206C2D9A0047A468 /* UIImageView+Helper.swift in Sources */,
 				C3AA263B206B81E9000B80D8 /* Reachability.swift in Sources */,
 				C3AA2648206B81F4000B80D8 /* UIViewController+Helper.swift in Sources */,
 				C336AD26206BC04B00560E77 /* RepoCell.swift in Sources */,

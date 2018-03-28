@@ -17,6 +17,9 @@ enum Identifiers {
   //  MAIN storyboard identifier
   static let mainSB = "Main"
   
+  //  Detail Repo storyboard screen id
+  static let repoDetailScreen = "RepoDetailVC"
+  
   // Public project VC
   static let publicProjects = "PublicProjectsVC"
   

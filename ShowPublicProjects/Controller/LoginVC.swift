@@ -13,15 +13,30 @@ import Auth0
 class LoginVC: UIViewController, UITextFieldDelegate {
 
   @IBOutlet weak var enterTokenBtn: UIButton!
+  @IBOutlet weak var descriptionLbl: UILabel!
   
   override func viewDidLoad() {
       super.viewDidLoad()
-      // Do any additional setup after loading the view.
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    checkForToken()
   }
 
   override func didReceiveMemoryWarning() {
       super.didReceiveMemoryWarning()
       // Dispose of any resources that can be recreated.
+  }
+  
+  private func checkForToken(){
+    //checks if an access token is available otherwise login with credentials to get one.
+    if let _ = userDefaults.object(forKey: Identifiers.accessToken) as? String {
+      enterTokenBtn.setTitle("Go to repositories!", for: .normal)
+      descriptionLbl.text = "Access token is available. You can go check public repositories now."
+    } else {
+      enterTokenBtn.setTitle("Login", for: .normal)
+      descriptionLbl.text = "Access token is not available. Please login to get a new access token."
+    }
   }
   
   @IBAction func enterTokenBtnTapped(_ sender: Any) {
@@ -44,7 +59,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
           .scope("openid profile")
           .audience("https://" + clientInfo.domain + "/userinfo")
           .start {
-              SVProgressHUD.show(withStatus: "Authenticating...")
+              SVProgressHUD.show(withStatus: "Loading repos...")
               switch $0 {
               case .failure(let error):
                 SVProgressHUD.dismiss()
@@ -55,7 +70,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                   guard let accessToken = credentials.accessToken else { return }
                   //SAVE TOKEN
                   userDefaults.set(accessToken, forKey: Identifiers.accessToken)
-                  SVProgressHUD.show(withStatus: "Loading repos...")
                   APIService.getPublicRepositories { (repos) in
                     SVProgressHUD.dismiss()
                     let sb = UIStoryboard(name: Identifiers.mainSB, bundle: nil)

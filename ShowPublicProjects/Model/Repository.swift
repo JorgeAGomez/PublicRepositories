@@ -11,17 +11,17 @@ import Foundation
 class Repository {
   
   private var _id: Int
-  private var _owner: Owner
   private var _description: String
   private var _name: String
   private var _repoURL: String
+  private var _owner_username: String
   
   var id: Int {
     return _id
   }
   
-  var owner: Owner {
-    return _owner
+  var owner_username: String {
+    return _owner_username
   }
   
   var description: String {
@@ -36,20 +36,20 @@ class Repository {
     return _repoURL
   }
   
-  init(id: Int, owner: Owner, description: String, name: String, repoURL: String){
+  init(id: Int, description: String, name: String, repoURL: String, owner_username: String){
     self._id = id
-    self._owner = owner
     self._description = description
     self._name = name
     self._repoURL = repoURL
+    self._owner_username = owner_username
   }
   
   init(){
     self._id = -1
-    self._owner = Owner()
     self._name = ""
     self._description = ""
     self._repoURL = ""
+    self._owner_username = ""
   }
   
   

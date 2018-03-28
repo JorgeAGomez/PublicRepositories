@@ -49,6 +49,14 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
+    let currentRepo = allRepos[indexPath.row]
+    APIService.getUserInformation(username: currentRepo.owner_username) { (ownerInfo) in
+      let sb = UIStoryboard(name: Identifiers.mainSB, bundle: nil)
+      let vc = sb.instantiateViewController(withIdentifier: Identifiers.repoDetailScreen) as! RepoDetailVC
+      vc.repository = currentRepo
+      vc.owner = ownerInfo
+      self.present(vc, animated: true, completion: nil)
+    }
   }
 
   @IBAction func logoutBtnTapped(_ sender: Any) {

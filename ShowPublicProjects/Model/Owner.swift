@@ -13,9 +13,11 @@ class Owner {
   private var _avatar_url: String
   private var _id: Int
   private var _name: String
-  private var _followers_url: String
-  private var _following_url: String
-  private var _html_url: String
+  private var _followers_number: Int
+  private var _following_number: Int
+  private var _company: String
+  private var _email: String
+  private var _public_repos_number: Int
   
   //create getters
   
@@ -31,37 +33,47 @@ class Owner {
     return _name
   }
   
-  var followers_url: String {
-    return _followers_url
+  var followers_number: Int {
+    return _followers_number
   }
   
-  var following_url: String {
-    return _following_url
+  var following_number: Int {
+    return _following_number
   }
   
-  var html_url: String {
-    return _html_url
+  var company: String {
+    return _company
   }
   
+  var email: String {
+    return _email
+  }
   
-  init(avatarUrl: String, id: Int, name: String, followersUrl: String, followingUrl: String, htmlUrl: String){
-    self._avatar_url = avatarUrl
-    self._id = id
-    self._name = name
-    self._following_url = followingUrl
-    self._followers_url = followersUrl
-    self._html_url = htmlUrl
+  var public_repo_number: Int {
+    return _public_repos_number
   }
   
   init(){
     self._avatar_url = ""
     self._id = -1
     self._name = ""
-    self._followers_url = ""
-    self._following_url = ""
-    self._html_url = ""
+    self._followers_number = 0
+    self._following_number = 0
+    self._company = ""
+    self._email = ""
+    self._public_repos_number = 0
   }
   
+  init(avatar_url: String, id: Int, name: String, followers_number: Int, following_number: Int, company: String, email: String, public_repos_number: Int){
+    self._avatar_url = avatar_url
+    self._id = id
+    self._name = name
+    self._followers_number = followers_number
+    self._following_number = following_number
+    self._company = company
+    self._email = email
+    self._public_repos_number = public_repos_number
+  }
   
   
   
