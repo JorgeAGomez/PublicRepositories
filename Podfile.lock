@@ -1,0 +1,21 @@
+PODS:
+  - Alamofire (4.7.0)
+  - Auth0 (1.10.1):
+    - SimpleKeychain
+  - SimpleKeychain (0.8.0)
+  - SVProgressHUD (2.2.5)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.7)
+  - Auth0 (~> 1.0)
+  - SVProgressHUD
+
+SPEC CHECKSUMS:
+  Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
+  Auth0: 9d36ee6f452b7bd0af3907cb6c674425599e6f0e
+  SimpleKeychain: 84c748463eec601dfee5e7990f55cc82edc5488d
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+
+PODFILE CHECKSUM: 0a6b4220d36a2a4e89aacd6e2546f8c491a8425b
+
+COCOAPODS: 1.4.0

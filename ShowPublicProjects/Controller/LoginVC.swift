@@ -7,29 +7,91 @@
 //
 
 import UIKit
+import SVProgressHUD
+import Auth0
 
-class LoginVC: UIViewController {
+class LoginVC: UIViewController, UITextFieldDelegate {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+  @IBOutlet weak var enterTokenBtn: UIButton!
+  
+  override func viewDidLoad() {
+      super.viewDidLoad()
+      // Do any additional setup after loading the view.
+  }
 
-        // Do any additional setup after loading the view.
+  override func didReceiveMemoryWarning() {
+      super.didReceiveMemoryWarning()
+      // Dispose of any resources that can be recreated.
+  }
+  
+  @IBAction func enterTokenBtnTapped(_ sender: Any) {
+    //checks if an access token is available otherwise login with credentials to get one.
+    if let _ = userDefaults.object(forKey: Identifiers.accessToken) as? String {
+      SVProgressHUD.show(withStatus: "Loading repos...")
+      APIService.getPublicRepositories { (repos) in
+        SVProgressHUD.dismiss()
+        let sb = UIStoryboard(name: Identifiers.mainSB, bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: Identifiers.publicProjects) as! PublicProjectsVC
+        vc.allRepos = repos
+        let nvc = UINavigationController(rootViewController: vc)
+        nvc.isNavigationBarHidden = true
+        self.present(nvc, animated: true, completion: nil)
+      }
+    } else {
+        guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
+        Auth0
+          .webAuth()
+          .scope("openid profile")
+          .audience("https://" + clientInfo.domain + "/userinfo")
+          .start {
+              SVProgressHUD.show(withStatus: "Authenticating...")
+              switch $0 {
+              case .failure(let error):
+                SVProgressHUD.dismiss()
+                let errorString = error as? String ?? "Authentication failed"
+                self.showErrorAlert(errorString)
+              case .success(let credentials):
+                  SVProgressHUD.dismiss()
+                  guard let accessToken = credentials.accessToken else { return }
+                  //SAVE TOKEN
+                  userDefaults.set(accessToken, forKey: Identifiers.accessToken)
+                  SVProgressHUD.show(withStatus: "Loading repos...")
+                  APIService.getPublicRepositories { (repos) in
+                    SVProgressHUD.dismiss()
+                    let sb = UIStoryboard(name: Identifiers.mainSB, bundle: nil)
+                    let vc = sb.instantiateViewController(withIdentifier: Identifiers.publicProjects) as! PublicProjectsVC
+                    vc.allRepos = repos
+                    let nvc = UINavigationController(rootViewController: vc)
+                    nvc.isNavigationBarHidden = true
+                    self.present(nvc, animated: true, completion: nil)
+                  }
+              }
+          }
     }
+  }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+  fileprivate func showErrorAlert(_ message: String) {
+    let alert = UIAlertController(title: "Sorry", message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+    self.present(alert, animated: true, completion: nil)
+  }
 
-    /*
-    // MARK: - Navigation
+  func plistValues(bundle: Bundle) -> (clientId: String, domain: String)? {
+      guard
+          let path = bundle.path(forResource: "Auth0", ofType: "plist"),
+          let values = NSDictionary(contentsOfFile: path) as? [String: Any]
+          else {
+              return nil
+      }
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+      guard
+          let clientId = values["ClientId"] as? String,
+          let domain = values["Domain"] as? String
+          else {
+              return nil
+      }
+      return (clientId: clientId, domain: domain)
+  }
+  
 
 }

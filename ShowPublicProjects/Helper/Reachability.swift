@@ -8,10 +8,6 @@
 import Foundation
 import SystemConfiguration
 
-// Usage
-//if Reachability.isConnectedToNetwork() {
-//    //do something
-//}
 
 class Reachability {
     

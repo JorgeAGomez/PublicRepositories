@@ -19,13 +19,32 @@ class RepoCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  //create labels
+  override func awakeFromNib() {
+      super.awakeFromNib()
+      // Initialization code
+  }
   
+  open var repoTitleText: String! {
+    didSet {
+      titleLabel.text = repoTitleText
+      //style label
+      titleLabel.textColor = .black
+    }
+  }
+  
+  //create labels
+  let titleLabel: UILabel = {
+    let label = UILabel()
+    //label.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+    return label
+  }()
   
   
   func setupViews(){
-    
-      //add subiews and setup anchors
+      self.accessoryType = .disclosureIndicator
+    addSubview(titleLabel)
+  
+    titleLabel.anchor(topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, topConstant: 10, leftConstant: 15, bottomConstant: 10, rightConstant: 10, widthConstant: 0, heightConstant: 0)
   }
   
 }

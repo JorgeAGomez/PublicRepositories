@@ -7,3 +7,24 @@
 //
 
 import Foundation
+
+//USER DEFAULTS
+let userDefaults = UserDefaults.standard
+
+
+enum Identifiers {
+  
+  //  MAIN storyboard identifier
+  static let mainSB = "Main"
+  
+  // Public project VC
+  static let publicProjects = "PublicProjectsVC"
+  
+  //access Token
+  static let accessToken = "accessToken"
+  
+  //public projects cell id
+  static let publicReposCellId = "publicReposCellId"
+  
+  
+}

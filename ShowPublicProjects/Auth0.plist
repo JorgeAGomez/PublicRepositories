@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-   Auth0.plist
-   ShowPublicProjects
+<!-- Auth0.plist -->
 
-   Created by Jorge Gomez on 2018-03-28.
-   Copyright (c) 2018 codeByMe. All rights reserved.
--->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-    
-    </dict>
+<dict>
+  <key>ClientId</key>
+  <string>E3CDSZ25Ek_ccdVysjkeS0lNFk83O7rj</string>
+  <key>Domain</key>
+  <string>publicprojects.auth0.com</string>
+</dict>
 </plist>
