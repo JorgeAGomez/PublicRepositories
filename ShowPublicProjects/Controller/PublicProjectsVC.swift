@@ -9,11 +9,13 @@
 import UIKit
 import SVProgressHUD
 
-class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
   var allRepos = [Repository]()
 
   @IBOutlet weak var tableView: UITableView!
+  
+  
   override func viewDidLoad() {
       super.viewDidLoad()
       setupViews()
@@ -29,7 +31,7 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
    tableView.estimatedRowHeight = 30
    tableView.rowHeight = UITableViewAutomaticDimension
   }
-  
+
   
   //  MARK: - DATA SOURCE
   func numberOfSections(in tableView: UITableView) -> Int {
@@ -37,6 +39,7 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
     return allRepos.count
   }
   
@@ -56,6 +59,26 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
       vc.repository = currentRepo
       vc.owner = ownerInfo
       self.present(vc, animated: true, completion: nil)
+    }
+  }
+  
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    
+    // Check scrolled percentage
+    let yOffset = tableView.contentOffset.y;
+    let height = tableView.contentSize.height - tableView.frame.size.height;
+    let scrolledPercentage = yOffset / height;
+    
+    // Check if all the conditions are met to allow loading the next page
+    if (scrolledPercentage > 0.6){
+    // This is the bottom of the table view, load more data here.
+    SVProgressHUD.show()
+      let idString = "\(allRepos[indexPath.row].id)"
+      APIService.getPublicRepositoriesSince(repoId: idString, completed: { (newRepos) in
+        SVProgressHUD.dismiss()
+        self.allRepos += newRepos
+        tableView.reloadData()
+      })
     }
   }
 

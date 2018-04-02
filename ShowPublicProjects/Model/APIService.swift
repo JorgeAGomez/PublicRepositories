@@ -20,9 +20,11 @@ let BASE_URL = "https://api.github.com"
 
 let PUBLIC_REPOS = "/repositories"
 let REPO_OWNER = "/users/"
+let SEARCH = "/search/repositories"
 
 class APIService {
 
+  //Get all public repositories. Only returns about 300 repos.
   static func getPublicRepositories(completed: @escaping ([Repository]) -> ()){
     var allRepositoriesArray = [Repository]()
     
@@ -57,9 +59,6 @@ class APIService {
             let description = repo["description"] as? String ?? ""
             let repo_name = repo["name"] as? String ?? "No name"
             let repoURL = repo["repo_url"] as? String ?? ""
-            guard let isPrivate = repo["private"] as? Bool else {
-              continue
-            }
             
             let newRepo = Repository(id: repo_id, description: description, name: repo_name, repoURL: repoURL, owner_username: name)
             allRepositoriesArray.append(newRepo)
@@ -67,9 +66,58 @@ class APIService {
         }
       completed(allRepositoriesArray)
     })
-
   }
   
+  //Returns all public repos. Returns repos starting by the repo-id provided.
+  static func getPublicRepositoriesSince(repoId: String, completed: @escaping ([Repository]) -> ()){
+    var allRepositoriesArray = [Repository]()
+    
+    guard let token = userDefaults.object(forKey: Identifiers.accessToken) as? String else { return }
+    
+    let parameters = [
+      "since" : repoId
+    ]
+    
+    let headers: HTTPHeaders = [
+      "Authorization": token,
+      "Accept": "application/vnd.github.v3+json"
+    ]
+    
+    guard Reachability.isConnectedToNetwork() else {
+      // show internet error message
+      return
+    }
+   
+    let url = URL(string: "\(BASE_URL)\(PUBLIC_REPOS)")
+    Alamofire.request(url!, method: .get, parameters: parameters, headers: headers).responseJSON(completionHandler: { (response) in
+        debugPrint(response)
+        let statusCode = response.response?.statusCode
+        if statusCode == 200 {
+          guard let reposData = response.value as? [Dictionary<String,Any>] else {
+            return
+          }
+          
+          for repo in reposData {
+            //Owner name
+            guard let ownerData = repo["owner"] as? Dictionary<String,Any> else { continue }
+            let name = ownerData["login"] as? String ?? "No Name"
+
+            //Repo info
+            let repo_id = repo["id"] as? Int ?? -1
+            let description = repo["description"] as? String ?? ""
+            let repo_name = repo["name"] as? String ?? "No name"
+            let repoURL = repo["repo_url"] as? String ?? ""
+
+            
+            let newRepo = Repository(id: repo_id, description: description, name: repo_name, repoURL: repoURL, owner_username: name)
+            allRepositoriesArray.append(newRepo)
+          }
+        }
+      completed(allRepositoriesArray)
+    })
+  }
+  
+  //get detailed data about user/ repo owner
   static func getUserInformation(username: String, completed: @escaping (Owner) -> ()){
     
     guard let token = userDefaults.object(forKey: Identifiers.accessToken) as? String else {
@@ -112,9 +160,60 @@ class APIService {
         }
       completed(owner)
     })
-    
-    
   }
+  
+  static func searchReposForKeyword(keyword: String, completed: @escaping ([Repository]) -> ()){
+    var allRepositoriesArray = [Repository]()
+    
+    guard let token = userDefaults.object(forKey: Identifiers.accessToken) as? String else { return }
+    
+    let parameters = [
+      "q" : keyword
+    ]
+    
+    let headers: HTTPHeaders = [
+      "Authorization": token,
+      "Accept": "application/vnd.github.v3+json"
+    ]
+    
+    guard Reachability.isConnectedToNetwork() else {
+      // show internet error message
+      return
+    }
+   
+    let url = URL(string: "\(BASE_URL)\(SEARCH)")
+    Alamofire.request(url!, method: .get, parameters: parameters, headers: headers).responseJSON(completionHandler: { (response) in
+        debugPrint(response)
+        let statusCode = response.response?.statusCode
+        if statusCode == 200 {
+          guard let searchData = response.value as? Dictionary<String,Any> else {
+            return
+          }
+          
+          let reposFound = searchData["items"] as? [Dictionary<String,Any>] ?? [Dictionary<String,Any>]()
+          
+
+          for repo in reposFound {
+            //Owner name
+            guard let ownerData = repo["owner"] as? Dictionary<String,Any> else { continue }
+            let name = ownerData["login"] as? String ?? "No Name"
+
+            //Repo info
+            let repo_id = repo["id"] as? Int ?? -1
+            let description = repo["description"] as? String ?? ""
+            let repo_name = repo["name"] as? String ?? "No name"
+            let repoURL = repo["repo_url"] as? String ?? ""
+
+            
+            let newRepo = Repository(id: repo_id, description: description, name: repo_name, repoURL: repoURL, owner_username: name)
+            allRepositoriesArray.append(newRepo)
+          }
+        }
+      completed(allRepositoriesArray)
+    })
+  }
+  
+  
   
   
   
