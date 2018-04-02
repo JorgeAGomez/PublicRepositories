@@ -13,12 +13,15 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 
   var allRepos = [Repository]()
 
+  @IBOutlet weak var messageLbl: UILabel!
+  @IBOutlet weak var searchBar: UISearchBar!
   @IBOutlet weak var tableView: UITableView!
-  
+  var searchMode = false
   
   override func viewDidLoad() {
       super.viewDidLoad()
       setupViews()
+      hideKeyboardWhenTappedAround()
   }
 
   override func didReceiveMemoryWarning() {
@@ -26,12 +29,49 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
       // Dispose of any resources that can be recreated.
   }
   
+  private func showMessageLbl(){
+    messageLbl.alpha = 1
+    tableView.separatorStyle = .none
+  }
+  
+  private func hideMessageLbl(){
+    messageLbl.alpha = 0
+    tableView.separatorStyle = .singleLine
+  }
+  
   func setupViews(){
    tableView.register(RepoCell.self, forCellReuseIdentifier: Identifiers.publicReposCellId)
    tableView.estimatedRowHeight = 30
    tableView.rowHeight = UITableViewAutomaticDimension
+   searchBar.delegate = self
   }
-
+  
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    if searchBar.text != "" {
+      self.dismissKeyboard()
+      SVProgressHUD.show(withStatus: "Searching...")
+      APIService.searchReposForKeyword(keyword: searchBar.text!) { (reposFound) in
+        SVProgressHUD.dismiss()
+        self.allRepos = reposFound
+        self.tableView.reloadData()
+      }
+    }
+  }
+  
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    if searchText.isEmpty {
+      searchMode = false
+      dismissKeyboard()
+      APIService.getPublicRepositories { (repos) in
+        SVProgressHUD.dismiss()
+        self.allRepos = repos
+        self.tableView.reloadData()
+      }
+    } else {
+      searchMode = true
+    }
+  }
+  
   
   //  MARK: - DATA SOURCE
   func numberOfSections(in tableView: UITableView) -> Int {
@@ -39,6 +79,11 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if allRepos.count < 1 {
+      showMessageLbl()
+    } else {
+      hideMessageLbl()
+    }
     
     return allRepos.count
   }
@@ -70,7 +115,7 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     let scrolledPercentage = yOffset / height;
     
     // Check if all the conditions are met to allow loading the next page
-    if (scrolledPercentage > 0.6){
+    if (scrolledPercentage > 0.6) && !searchMode {
     // This is the bottom of the table view, load more data here.
     SVProgressHUD.show()
       let idString = "\(allRepos[indexPath.row].id)"
@@ -86,4 +131,5 @@ class PublicProjectsVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     userDefaults.set(nil, forKey: Identifiers.accessToken)
     self.dismiss(animated: true, completion: nil)
   }
+  
 }
