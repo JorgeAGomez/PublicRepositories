@@ -29,5 +29,8 @@ enum Identifiers {
   //public projects cell id
   static let publicReposCellId = "publicReposCellId"
   
+  //detail cell id
+  static let detailCellId = "detailCellId"
+  
   
 }

@@ -20,10 +20,14 @@ class RepoDetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource
   @IBOutlet weak var repoAvatarImg: UIImageView!
   var repository: Repository!
   var owner: Owner!
-
+  
+  var repoData = [String]()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     setupViews()
+    let repodescription = repository.description
+    repoData.append(repodescription)
     // Do any additional setup after loading the view.
   }
   
@@ -41,6 +45,13 @@ class RepoDetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     repoNameLbl.text = repository.name
     repoAvatarImg.downloadedFrom(link: owner.avatar_url, contentMode: .scaleAspectFit)
     repoAvatarImg.layer.cornerRadius = 10
+    
+    //
+    tableView.estimatedRowHeight = 50
+    tableView.rowHeight = UITableViewAutomaticDimension
+    
+    //register cells
+    tableView.register(detailCell.self, forCellReuseIdentifier: Identifiers.detailCellId)
   }
 
   @IBAction func backBtnTapped(_ sender: Any) {
@@ -52,10 +63,17 @@ class RepoDetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    return repoData.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    return UITableViewCell()
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: Identifiers.detailCellId, for: indexPath) as? detailCell else { return UITableViewCell() }
+    let currentText = repoData[indexPath.row]
+    cell.cellText = currentText
+    return cell
+  }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return UITableViewAutomaticDimension
   }
 }
